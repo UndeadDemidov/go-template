@@ -83,7 +83,7 @@ tidy:
 # ==============================================================================
 # Build commands
 
-gen: install-tools
+gen: tidy install-tools
 	@echo Running go generate...
 #	@sh ./proto_gen.sh .
 	@go generate -x $$(go list ./... | grep -v /gen_pb/ | grep -v /googleapis/ | grep -v /pkg)
@@ -92,6 +92,17 @@ build: gen
 	@echo Building...
 	@go build -v ./...
 
+win: gen
+	@echo Building for windows...
+	@GOOS=windows GOARCH=386 go build -o $(PROJECT_NAME).exe ./
+
+mac: gen
+	@echo Building for mac...
+	@GOOS=darwin GOARCH=amd64 go build -o $(PROJECT_NAME) ./
+
+linux: gen
+	@echo Building for linux...
+	@GOOS=linux GOARCH=amd64 go build -o $(PROJECT_NAME) ./
 # ==============================================================================
 # Test commands
 
